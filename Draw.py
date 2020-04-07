@@ -35,6 +35,7 @@ class Animate:
         self.rows = grid.rows
         self.cols = grid.cols
         self.blocks = grid.blocks
+        self.target = grid.finish
 
     def show(self, pos_list):
         root = Tk()
@@ -44,15 +45,24 @@ class Animate:
         canvas = Canvas(root, width=cw, height=ch, background="white")
         canvas.grid(row=0, column=0)
         draw_grid(self.rows, self.cols, self.blocks, canvas)
-        photo = PhotoImage(file=r"C:\Users\souymo\PycharmProjects\Reinforced_Learning\run_right_37.png")
+        house = ImageTk.PhotoImage(Image.open("./house37.jpeg"))
+        canvas.create_image(self.target[1] * 40 + 1 + 18, self.target[0] * 40 + 1 + 18, image=house)
+        #draw_fill_box(self.target[0], self.target[1], canvas)
+        #photo = PhotoImage(file="./run_right_37.png")
+        photo = ImageTk.PhotoImage(Image.open("run_right_37.png"))
         #draw_running_man(2,2, photo, canvas)
 
-        cycle_period = 1000  # time between fresh positions of the ball
+        cycle_period = 500  # time between fresh positions of the ball
         for pos in pos_list:
-            print(pos)
+            #print(pos)
             draw_running_man(pos[0], pos[1], photo, canvas)
+            #draw_fill_box(pos[0], pos[1], canvas)
             canvas.update()
             canvas.after(cycle_period)
             erase_fill_box(pos[0], pos[1], canvas)
-        draw_fill_box(pos_list[-1][0], pos_list[-1][1], canvas)
+        if pos_list[-1] == self.target:
+            chill = ImageTk.PhotoImage(Image.open("./chill37.jpeg"))
+            canvas.create_image(self.target[1] * 40 + 1 + 18, self.target[0] * 40 + 1 + 18, image=chill)
+        else:
+            draw_fill_box(pos_list[-1][0], pos_list[-1][1], canvas)
         root.mainloop()
